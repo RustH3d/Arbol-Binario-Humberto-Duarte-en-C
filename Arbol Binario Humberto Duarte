@@ -1,0 +1,135 @@
+//Humberto Duarte C.I 30.425.622
+#include<stdlib.h>
+#include<stdio.h>
+
+struct nodo{
+	struct nodo*padre;
+	struct nodo*izquierda;
+	struct nodo*derecha;
+	int dato;
+};
+
+struct nodo* crearNodo( struct nodo* padre, int dato);
+void agregarDato(struct nodo* arbol, int dato);
+void enorden(struct nodo *a);
+void imprimirEnorden(struct nodo *arbol);
+void preorden(struct nodo *a);
+void imprimirpreorden(struct nodo* arbol);
+void postorden(struct nodo *a);
+void imprimirpostorden (struct nodo* arbol);
+
+int main(){
+	struct nodo* arbol;
+	arbol= crearNodo(NULL,5);
+	agregarDato(arbol, 10);
+	agregarDato(arbol, 2);
+	agregarDato(arbol, 4);
+	agregarDato(arbol, 11);
+	agregarDato(arbol, 1);
+	agregarDato(arbol, 9);
+	agregarDato(arbol, 3);
+	agregarDato(arbol, 5);
+	agregarDato(arbol, 13);
+	agregarDato(arbol, 12);
+	agregarDato(arbol, 14);
+	agregarDato(arbol, 2);
+	agregarDato(arbol, 0);
+	printf("El recorrido del arbol en preorden es: \n "); //El preorden recorre cada uno de los brazps, empezando por el derecho, hasta llegar al final, luego imprime el resto de nodos que quedaron pendiente
+	preorden(arbol);
+	printf("El recorrido del arbol en orden es: \n ");// El orden recorre cada uno de los brazos, hasta llegar al final dejando todo pendiente por imprimir, una vez haya terminado se imprimen los datos de menor a mayor valor
+	enorden(arbol);
+	printf("El recorrido del arbol en postorden es: \n ");//el postorden ira analizando cada uno de los brazos, imprimiendo el ultimo en ser analizado y dejando pendiente el resto, despues lo que quedaron pendientes se iran imprimiendo.
+	postorden(arbol);
+
+}
+
+struct nodo* crearNodo( struct nodo* padre, int dato){
+	struct nodo*a= calloc(sizeof(struct nodo), 1);
+	a->padre= padre;
+	a->dato= dato;
+	return a;
+}
+
+void agregarDato(struct nodo* arbol, int dato){
+	struct nodo* aux,*pivote;
+	int derecha= 0;
+	if(arbol != NULL){
+		aux=arbol;
+		while(aux != NULL){
+			pivote= aux;
+			if(dato > aux->dato ){
+				aux= aux->derecha;
+				derecha= 1; 
+			}
+			
+			else{
+				aux= aux->izquierda;
+				derecha=0;
+			}
+		}
+		aux= crearNodo(pivote, dato);
+		if (derecha){
+			printf("Se va a insertar el %i en el lado derecho de %i\n",dato,pivote->dato);
+			pivote->derecha= aux;
+			
+		}
+		
+		else {
+			printf("Se va a insertar el %i en el lado izquierdo de %i\n",dato,pivote->dato);
+			pivote->izquierda=aux;
+		}
+	}
+	
+	
+	else{
+		printf("El arbol se encuentra vacio\n");
+	}
+}
+
+void preorden(struct nodo *a){
+	if(a!=NULL){
+		printf(" %d ",a->dato);
+		preorden(a->izquierda);
+		preorden(a->derecha);
+	}
+}
+
+void enorden(struct nodo *a){
+	if(a!=NULL){		
+		enorden(a->izquierda);//1
+		printf(" %d ",a->dato);//2
+		enorden(a->derecha);//3
+	}
+}
+
+void postorden(struct nodo *a){
+	if(a !=  NULL){
+		postorden(a->izquierda);	
+		postorden(a->derecha);
+		printf(" %d ",a->dato);
+	}
+}
+
+
+void imprimirpreorden(struct nodo* arbol){
+	if(arbol !=  NULL){
+		preorden(arbol->padre);
+	}
+}
+
+void imprimirEnorden(struct nodo* arbol){
+	
+	if(arbol !=  NULL){
+		
+		enorden(arbol->padre);
+	}
+}
+
+
+
+void imprimirpostorden (struct nodo* arbol){
+	if(arbol !=  NULL){
+		
+		postorden(arbol->padre);
+	}
+}
